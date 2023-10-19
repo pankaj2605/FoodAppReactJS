@@ -2,7 +2,7 @@ import { useEffect,useState } from "react";
 import classes from "./AvailableMeals.module.css";
 import Card from "../UI/Card"
 import MealItem from "./MealItem/MealItem";
-
+// import data from './MealItem/data.json';
 
 
 const  AvailableMeals=()=>{
@@ -13,12 +13,13 @@ const  AvailableMeals=()=>{
 
   useEffect(async ()=>{
     try{
-      const response= await fetch('https/meals');
+      const response= await fetch('https://react-http-637af-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json');
       if(!response.ok){
         throw new Error("Something Went wrong")
       }
       const responseData= await response.json();
-  
+      // const responseData= data;
+      // console.log(responseData);
       const loadedMeals=[];
   
       for (const key in responseData){
@@ -32,12 +33,15 @@ const  AvailableMeals=()=>{
   
       setMeals(loadedMeals);
       setIsLoading(false);
+      return meals;
+      
     }catch(error){
       setIsLoading(false);
       setHttpError(error.message);
     }
     
   },[]);
+
 
   if(isLoading){
     return(
