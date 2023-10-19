@@ -11,36 +11,41 @@ const  AvailableMeals=()=>{
   const [isLoading,setIsLoading]=useState(true);
   const [httpError,setHttpError]=useState();
 
-  useEffect(async ()=>{
-    try{
-      const response= await fetch('https://react-http-637af-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json');
-      if(!response.ok){
-        throw new Error("Something Went wrong")
+  useEffect( ()=>{
+
+    const fetchmeals= async()=>{
+      try{
+       
+        const response= await fetch('https://react-http-637af-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json');
+        if(!response.ok){
+          throw new Error("Something Went wrong")
+        }
+        const responseData= await response.json();
+        // const responseData= data;
+        // console.log(responseData);
+        const loadedMeals=[];
+    
+        for (const key in responseData){
+          loadedMeals.push({
+            id:key,
+            name:responseData[key].name,
+            description:responseData[key].description,
+            price:responseData[key].price,
+          });
+        }
+    
+        setMeals(loadedMeals);
+        setIsLoading(false);
+        return meals;
+        
+      }catch(error){
+        setIsLoading(false);
+        setHttpError(error.message);
       }
-      const responseData= await response.json();
-      // const responseData= data;
-      // console.log(responseData);
-      const loadedMeals=[];
-  
-      for (const key in responseData){
-        loadedMeals.push({
-          id:key,
-          name:responseData[key].name,
-          description:responseData[key].description,
-          price:responseData[key].price,
-        });
-      }
-  
-      setMeals(loadedMeals);
-      setIsLoading(false);
-      return meals;
-      
-    }catch(error){
-      setIsLoading(false);
-      setHttpError(error.message);
     }
     
-  },[]);
+    fetchmeals();
+  },[meals]);
 
 
   if(isLoading){
